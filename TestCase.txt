@@ -1,0 +1,11 @@
+S(n)
+A
+ABA
+ABACABA
+ABACABADABACABA
+ABACABADABACABAEABACABADABACABA
+
+S(i) = 
+    if  i = j = (dau+cuoi)/2 => 1=A, 2=B, ... (mapping A-Z)
+        i < j = S(n-1) (De. quy)
+        i > j <=> j = i + n <=> j = i - n => S(i-n-1) (De. quy)

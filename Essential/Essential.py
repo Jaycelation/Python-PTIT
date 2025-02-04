@@ -19,3 +19,19 @@ def sieve(n):
 
 def is_palindrome(n):
     return str(n) == str(n)[::-1]
+
+def normalize_name(name):
+    words  = name.strip().split()
+    result = " ".join(word.capitalize() for word in words)
+    return result
+
+def base_conversion(a, b):
+    if a == 0:
+        return "0"
+    s = ""
+    digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    while a:
+        c = a % b
+        a //= b
+        s = digits[c] + s
+    return s

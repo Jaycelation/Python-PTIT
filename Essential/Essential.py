@@ -35,3 +35,16 @@ def base_conversion(a, b):
         a //= b
         s = digits[c] + s
     return s
+
+def off8():
+    offsets = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+    return offsets
+    # for dx, dy in offsets:
+    #     x = i + dx
+    #     y = j + dy
+    # OR
+    # dx = [-1, -1, -1, 0, 0, 1, 1, 1]
+    # dy = [-1, 0, 1, -1, 1, -1, 0, 1]
+    # for k in range(8):
+    #     x = i + dx[k]
+    #     y = j + dy[k]

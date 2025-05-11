@@ -1,39 +1,36 @@
-import math
-def checkP(n):
-    for i in range(2, int(math.sqrt(n)+1)):
-        if n % i == 0:
-            return False
-    return n > 1
+import itertools
 
-def initP(n):
-    arr = []
-    for i in range(2, n+1):
-        if checkP(i):
-            arr.append(i)
-    return arr
+def count(L, R, K):
+    return (R // K) - ((L - 1) // K)
 
-def count(L, R, k):
-    while L % k != 0:
-        L += 1
-    while R % k != 0:
-        R -= 1
-    return (R - L)/k + 1
+def sieve(n):
+    is_prime = [True] * (n + 1)
+    primes = []
+    for i in range(2, n + 1):
+        if is_prime[i]:
+            primes.append(i)
+            for j in range(i * i, n + 1, i):
+                is_prime[j] = False
+    return primes
 
-import sys
-
-def count_valid_numbers(L, R, N):
-    def is_valid(num, N):
-        for i in range(2, N + 1):
-            if num % i == 0:
-                return False
-        return True
+def inclusion_exclusion(L, R, primes):
+    m = len(primes)
+    res = 0
     
-    count = 0
-    for num in range(L, R + 1):
-        if is_valid(num, N):
-            count += 1
+    def dfs(index, product, sign):
+        nonlocal res
+        if index == m or product > R:
+            return
+        
+        new_product = product * primes[index]
+        if new_product <= R:
+            res += sign * count(L, R, new_product)
+            dfs(index + 1, new_product, -sign)
+        
+        dfs(index + 1, product, sign)
     
-    return count
+    dfs(0, 1, 1)
+    return res
 
 while True:
     try:
@@ -42,11 +39,13 @@ while True:
             break
         
         L, R = map(int, line.split())
-        n = int(input())
-        print(count_valid_numbers(L, R, n))
+        N = int(input())
+        primes = sieve(N)
+        total = R - L + 1
+        bad = inclusion_exclusion(L, R, primes)
+
+        print(total - bad)
         
 
     except EOFError:
         break
-
-#Hard

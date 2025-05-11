@@ -1,5 +1,14 @@
 import math
 
+def dirvisors(n):
+    arr = []
+    for i in range(1, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            arr.append(i)
+        if i != n // i:
+            arr.append(n // i)
+        return sorted(arr)
+
 def prime(n):
     for i in range(2, int(math.sqrt(n)+1)):
         if n % i == 0:

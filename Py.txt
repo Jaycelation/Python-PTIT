@@ -1,0 +1,8 @@
+self.id = 'KH{:0Xd}'.format(id)
+
+self.FUNCTION()
+list.sort(key=lambda x : (-x.VARIABLE))
+print(*list, sep='\n')
+
+d = dict({})
+d[self.masv] = self.cc

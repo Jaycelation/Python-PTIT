@@ -1,47 +1,67 @@
-from itertools import combinations
+import itertools
 
-def dist2(p1, p2):
-    return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
-def get_circle(p1, p2, p3):
-    x1, y1 = p1
-    x2, y2 = p2
-    x3, y3 = p3
-    temp = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
-    if temp == 0:
-        return None
-    
-    A = x1**2 + y1**2
-    B = x2**2 + y2**2
-    C = x3**2 + y3**2
-    D = 2 * temp
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
-    ux = ((A) * (y2 - y3) + (B) * (y3 - y1) + (C) * (y1 - y2)) / D
-    uy = ((A) * (x3 - x2) + (B) * (x1 - x3) + (C) * (x2 - x1)) / D
+    def __hash__(self):
+        return hash((self.x, self.y))
 
-    center = (ux, uy)
-    radius = dist2(center, p1)
-    return center, radius
+    @staticmethod
+    def tam(p1, p2, p3):
+        a = 2 * (p1.x - p2.x)
+        b = 2 * (p1.y - p2.y)
+        c = p1.x**2 + p1.y**2 - p2.x**2 - p2.y**2
+        d = 2 * (p1.x - p3.x)
+        e = 2 * (p1.y - p3.y)
+        f = p1.x**2 + p1.y**2 - p3.x**2 - p3.y**2
+        D = b * d - a * e
+        if D == 0:
+            return False
+        return Point((b * f - e * c) / D, (d * c - a * f) / D)
 
+    def kc(self, o):
+        d = (self.x - o.x) ** 2 + (self.y - o.y) ** 2
+        return round(d**0.5)
 
-def check(k, points):
-    for a, b, c in combinations(points, 3):
-        center = get_circle(a, b, c)
-        if not center:
+def solve(n, K, p):
+    for i, j, k in itertools.combinations(range(n), 3):
+        p1, p2, p3 = p[i], p[j], p[k]
+        O = Point.tam(p1, p2, p3)
+        if not O:
             continue
-        r2 = dist2(center, a)
-        count = 0
-        for p in points:
-            if p in (a, b, c):
-                continue
-            if dist2(p, center) < r2:
-                count += 1
-        if count == k:
+        R = O.kc(p1)
+        cnt = 0
+        for t in range(n):
+            p4 = p[t]
+            if O.kc(p4) < R:
+                cnt += 1
+            if cnt > K or n - t < K - cnt:
+                break
+        if cnt == K:
             return "YES"
     return "NO"
 
-for _ in range(int(input())):
-    n, k = int(input()), int(input())
+# Đọc input từ stdin
+import sys
+input_data = list(map(int, sys.stdin.read().split()))
+idx = 0
+T = input_data[idx]
+idx += 1
 
-    points = [tuple(map(int, input().split())) for _ in range(n)]
-    print(check(k, points))
+for _ in range(T):
+    n = input_data[idx]
+    k = input_data[idx + 1]
+    idx += 2
+    points = []
+    for _ in range(n):
+        x = input_data[idx]
+        y = input_data[idx + 1]
+        points.append(Point(x, y))
+        idx += 2
+    points = list(set(points))  # Loại bỏ trùng điểm
+    print(solve(len(points), k, points))
